@@ -238,6 +238,7 @@ public class Main{
 		/* 하단바 마이페이지 버튼 이벤트 */
 		Mypage_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new MyPage();
             	frame.setVisible(false);
 			}
 		});

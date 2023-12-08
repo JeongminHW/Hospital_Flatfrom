@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.util.List;
 
 import DB.*;
-import Main.Main;
+import Main.*;
 
 public class HospitalSearch extends JFrame {
 	DefaultTableModel tableModel = null;
@@ -187,9 +187,20 @@ public class HospitalSearch extends JFrame {
 			}
 		});
         
+		
+		/* 창 닫기 이벤트 */
+		frame.addWindowListener(new WindowCloseHandler());
+		
         
         setVisible(true);
     }
+    
+	class WindowCloseHandler extends WindowAdapter{
+	    public void windowClosing(WindowEvent e) {
+	        System.out.println("로그아웃 완료");
+	        db.logout();
+	    }
+	}
 
     public static void main(String[] args) {
         new HospitalSearch();

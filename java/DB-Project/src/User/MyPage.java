@@ -159,10 +159,16 @@ public class MyPage extends JFrame {
 		/* 회원 탈퇴 버튼 이벤트 */
 		user_Cancel_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				db.usercancel();
-				System.out.println("성공");
-				new UserLogin();
-				setVisible(false);
+				int result = JOptionPane.showConfirmDialog(null, "탈퇴 하시겠습니까?", null, JOptionPane.YES_NO_OPTION);
+ 			   	if(result == JOptionPane.YES_OPTION)
+ 			   	{
+ 					db.usercancel();
+ 					System.out.println("성공");
+ 					new UserLogin();
+ 					setVisible(false);
+ 			   	}
+ 			   	else
+ 			   		return;
 			}
 		});
 		
@@ -211,8 +217,19 @@ public class MyPage extends JFrame {
 			}
 		});
 	    
+		
+		/* 창 닫기 이벤트 */
+		addWindowListener(new WindowCloseHandler());
+		
 	    
 	    setVisible(true);
+	}
+	
+	class WindowCloseHandler extends WindowAdapter{
+	    public void windowClosing(WindowEvent e) {
+	        System.out.println("로그아웃 완료");
+	        db.logout();
+	    }
 	}
 
     public static void main(String[] args) {

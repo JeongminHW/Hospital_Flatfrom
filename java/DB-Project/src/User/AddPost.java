@@ -73,9 +73,11 @@ public class AddPost extends JFrame{
         		System.exit(0);
 			}
         });
+		
 
         setVisible(true);
     }
+    
     public static void main(String[] args) {
         new AddPost();
     }
