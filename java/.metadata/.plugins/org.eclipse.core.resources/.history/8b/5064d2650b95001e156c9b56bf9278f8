@@ -1,0 +1,11 @@
+package Doctor;
+
+import User.*;
+
+public class DrMain {
+
+
+    public static void main(String[] args) {
+        new DrMain();
+    }
+}

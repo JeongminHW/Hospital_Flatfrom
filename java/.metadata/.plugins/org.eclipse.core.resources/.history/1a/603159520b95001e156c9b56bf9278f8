@@ -1,0 +1,8 @@
+package Doctor;
+
+public class DrAnswer {
+
+    public static void main(String[] args) {
+        new DrAnswer();
+    }
+}

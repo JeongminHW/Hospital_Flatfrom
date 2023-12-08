@@ -1,0 +1,95 @@
+package User;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Vector;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+public class HistoryList {
+
+    private JFrame mainFrame;
+    private JTable postTable;
+    private DefaultTableModel tableModel;
+    private JTextField searchField;
+
+    /**
+     * @wbp.parser.entryPoint
+     */
+    public HistoryList() {
+        initialize();
+    }
+
+    private void initialize() {
+        mainFrame = new JFrame("게시판");
+        mainFrame.setSize(700, 430);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        tableModel = new DefaultTableModel(new Object[]{"게시글 번호", "제목", "내용", "아이디"}, 0);
+        postTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(postTable);
+        scrollPane.setBounds(0, 33, 684, 358);
+
+        // Disable column reordering
+        JTableHeader header = postTable.getTableHeader();
+        header.setReorderingAllowed(false);
+        mainFrame.getContentPane().setLayout(null);
+        mainFrame.getContentPane().add(scrollPane);
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.setBounds(0, 0, 684, 33);
+        searchField = new JTextField(20);
+        searchField.setBounds(189, 6, 226, 21);
+        JButton searchButton = new JButton("검색");
+        searchButton.setBounds(420, 5, 71, 23);
+        JButton newPostButton = new JButton("글작성");
+        newPostButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        newPostButton.setBounds(581, 5, 91, 23);
+        searchPanel.setLayout(null);
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+        searchPanel.add(newPostButton);
+
+        mainFrame.getContentPane().add(searchPanel);
+
+        // Double-click on a row to open the edit post dialog
+        newPostButton.addActionListener(e -> openAddPostDialog());
+        searchButton.addActionListener(e -> searchPosts());
+
+        mainFrame.setVisible(true);
+    }
+
+    public DefaultTableModel getTableModel() {
+        return tableModel;
+    }
+
+    private void openAddPostDialog() {
+        AddPost addPostGUI = new AddPost();
+        addPostGUI.setVisible(true);
+    }
+
+
+
+    private void searchPosts() {
+        String keyword = searchField.getText().toLowerCase();
+        DefaultTableModel model = (DefaultTableModel) postTable.getModel();
+        model.setRowCount(0); // Clear table
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String title = tableModel.getValueAt(i, 1).toString().toLowerCase();
+            String content = tableModel.getValueAt(i, 2).toString().toLowerCase();
+            if (title.contains(keyword) || content.contains(keyword)) {
+                model.addRow((Vector<?>) tableModel.getDataVector().elementAt(i));
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+    }
+}

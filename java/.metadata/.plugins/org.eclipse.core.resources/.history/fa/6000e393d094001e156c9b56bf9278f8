@@ -1,0 +1,86 @@
+package User;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class AddPost extends JFrame{
+    private JTextArea contentArea;
+    private JTextField authorField;
+    private QnA QnA;
+
+    public AddPost() {
+    	JFrame addpostframe = new JFrame("게시글 등록");
+    	setSize(400, 400);
+    	setResizable(false); //창 크기 조절 X
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	
+    	Container contentPane = getContentPane(); // 컨텐트팬 알아내기
+	    contentPane.setLayout(null);
+	    contentPane.setBackground(Color.white);
+	    
+	    // 제목 라벨
+        JLabel title_lb = new JLabel("제목 :");
+        title_lb.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        title_lb.setHorizontalAlignment(SwingConstants.CENTER);
+        title_lb.setBounds(5, 20, 75, 35);
+        
+        // 제목 입력 필드
+	    JTextField titleField = new JTextField(0);
+        titleField.setBounds(73, 22, 310, 36);
+        contentPane.add(title_lb);
+        contentPane.add(titleField);
+        
+        //내용 입력 필드
+        JTextArea contentArea = new JTextArea();
+        contentArea.setBounds(73, 82, 75, 100);
+        
+        JLabel content_lb = new JLabel("내용 :");
+        content_lb.setFont(new Font("맑은 고딕", Font.BOLD, 13));
+        content_lb.setHorizontalAlignment(SwingConstants.CENTER);
+        content_lb.setBounds(5, 80, 74, 36);
+        contentPane.add(content_lb);
+        
+        //스크롤 내용입력 필드에 넣음
+        JScrollPane scrollPane = new JScrollPane(contentArea);
+        scrollPane.setBounds(73, 60, 311, 185);
+        contentPane.add(scrollPane);
+        
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER); //가로 스크롤바 사용 X
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);; //세로 스크롤바 필요한 경우에만 표시
+        
+
+        JButton addPostButton = new JButton("작성완료");
+        addPostButton.setBounds(0, 323, 192, 40);
+        addPostButton.setBorderPainted(false); //버튼 테두리 X
+        addPostButton.setBackground(new Color(204, 204, 255));
+        
+        JButton closeButton = new JButton("닫기");
+        closeButton.setBounds(194, 323, 192, 40);
+        closeButton.setBorderPainted(false); //버튼 테두리 X
+        closeButton.setBackground(new Color(204, 204, 255));
+        
+        contentPane.add(addPostButton);
+        contentPane.add(closeButton);
+        
+        
+        /* 작성 완료 버튼 클릭 이벤트 */
+        addPostButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+			}
+        });
+        
+        /* 취소 버튼 클릭 이벤트 */
+        closeButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		System.exit(0);
+			}
+        });
+
+        setVisible(true);
+    }
+    public static void main(String[] args) {
+        new AddPost();
+    }
+}
+

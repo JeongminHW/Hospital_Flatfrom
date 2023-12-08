@@ -1,0 +1,78 @@
+package User;
+
+//public class QnA {
+
+//}
+
+import javax.swing.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+
+import DB.*;
+
+public class QnA extends JFrame{
+	DefaultTableModel tableModel = null;
+	//Database db = new Database();
+	
+    public QnA() {
+    	JFrame frame = new JFrame("게시판");
+    	setSize(700, 430);
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	setBackground(Color.white);
+        
+        Container contentPane = getContentPane(); // 컨텐트팬 알아내기
+	    contentPane.setLayout(null);
+	    contentPane.setBackground(Color.white);
+    	
+    	String[] colName = {"번호", "아이디", "제목", "내용"};
+    	tableModel = new DefaultTableModel(colName, 0);
+	    
+        JTable postTable = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(postTable);
+        scrollPane.setBounds(0, 33, 688, 361); // 테이블 크기 조정
+        postTable.setRowHeight(20); //행 너비 조절
+        postTable.getParent().setBackground(Color.white); //테이블 배경 색 변경
+        postTable.getColumnModel().getColumn(0).setPreferredWidth(10); // 번호 열 너비 조절
+        postTable.getColumnModel().getColumn(1).setPreferredWidth(80); // 아이디 열 너비 조절
+        postTable.getColumnModel().getColumn(2).setPreferredWidth(230); // 제목 열 너비 조절
+        postTable.getColumnModel().getColumn(3).setPreferredWidth(230); // 내용 열 너비 조절
+        postTable.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        postTable.getTableHeader().setFont(new Font("맑은 고딕", Font.PLAIN, 14));
+        postTable.getTableHeader().setReorderingAllowed(false); //이동 불가
+        postTable.getTableHeader().setBackground(Color.white);
+        contentPane.setLayout(null);
+        contentPane.add(scrollPane);
+        
+        
+        //tableModel.addRow(data);
+
+        
+        JTextField searchField = new JTextField(20);
+        searchField.setBounds(189, 6, 226, 21);
+        
+        JButton searchButton = new JButton("검색");
+        searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+        searchButton.setBounds(420, 5, 71, 23);
+        searchButton.setContentAreaFilled(false);
+        
+        JButton newPostButton = new JButton("글작성");
+        newPostButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+        newPostButton.setBounds(581, 5, 91, 23);
+        newPostButton.setContentAreaFilled(false);
+        
+        contentPane.setLayout(null);
+        contentPane.add(searchField);
+        contentPane.add(searchButton);
+        contentPane.add(newPostButton);
+
+
+
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new QnA();
+    }
+}

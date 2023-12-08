@@ -1,0 +1,99 @@
+package User;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class HospitalSearch extends JFrame {
+    private JTextField searchField;
+    private JButton searchButton;
+    private JTable hospitalTable;
+    private DefaultTableModel tableModel;
+
+    public HospitalSearch() {
+        setTitle("Hospital Search App");
+        setSize(700, 430);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        initComponents();
+        addComponents();
+    }
+
+    private void initComponents() {
+        // 검색 창 및 버튼 초기화
+    	JTextField searchField = new JTextField();
+    	searchField.setSize(getPreferredSize());
+    	JButton searchButton = new JButton("검색");
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchHospital();
+            }
+        });
+
+        // 테이블 모델 및 테이블 초기화
+        tableModel = new DefaultTableModel();
+        hospitalTable = new JTable(tableModel);
+
+        // 테이블에 열 추가
+        tableModel.addColumn("병원명");
+        tableModel.addColumn("주소");
+        tableModel.addColumn("전화번호");
+
+    }
+
+
+    private void addComponents() {
+        // 레이아웃 설정
+        setLayout(new BorderLayout());
+
+        // 검색 패널 설정
+        JPanel searchPanel = new JPanel();
+        searchPanel.add(new JLabel("병원 검색: "));
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        // 테이블 패널 설정
+        JScrollPane tableScrollPane = new JScrollPane(hospitalTable);
+
+        // 프레임에 패널 추가
+        add(searchPanel, BorderLayout.NORTH);
+        add(tableScrollPane, BorderLayout.CENTER);
+    }
+
+    private void searchHospital() {
+        // 검색어 가져오기
+        String keyword = searchField.getText().toLowerCase();
+
+        // 테이블 초기화
+        tableModel.setRowCount(0);
+
+        // 가상의 병원 데이터에서 검색
+        String[][] data = {
+                {"병원1", "주소1", "전화번호1"},
+                {"병원2", "주소2", "전화번호2"},
+                {"병원3", "주소3", "전화번호3"}
+        };
+
+        for (String[] row : data) {
+            // 병원명, 주소, 전화번호 중 하나라도 검색어를 포함하면 결과에 추가
+            for (String field : row) {
+                if (field.toLowerCase().contains(keyword)) {
+                    tableModel.addRow(row);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new HospitalSearch().setVisible(true);
+            }
+        });
+    }
+}

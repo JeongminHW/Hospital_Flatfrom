@@ -1,0 +1,78 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class AddPostGUI {
+
+    private JFrame addPostFrame;
+    private JTextField titleField;
+    private JTextArea contentArea;
+    private JTextField authorField;
+
+    private PostListGUI postListGUI;
+
+    public AddPostGUI(PostListGUI postListGUI) {
+        this.postListGUI = postListGUI;
+        initialize();
+    }
+
+    private void initialize() {
+        addPostFrame = new JFrame("게시글 등록");
+        addPostFrame.setSize(400, 400);
+
+        titleField = new JTextField(0);
+        titleField.setBounds(73, 0, 311, 36);
+        contentArea = new JTextArea(10, 20);
+        authorField = new JTextField(20);
+        authorField.setBounds(73, 264, 311, 36);
+
+        JButton addPostButton = new JButton("작성완료");
+        addPostButton.setBounds(0, 310, 192, 50);
+        JButton closeButton = new JButton("닫기");
+        closeButton.setBounds(192, 310, 192, 50);
+        addPostFrame.getContentPane().setLayout(null);
+
+        JLabel label = new JLabel("제목:");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setBounds(0, 0, 74, 36);
+        addPostFrame.getContentPane().add(label);
+        addPostFrame.getContentPane().add(titleField);
+        JLabel label_1 = new JLabel("내용:");
+        label_1.setHorizontalAlignment(SwingConstants.CENTER);
+        label_1.setBounds(0, 60, 74, 36);
+        addPostFrame.getContentPane().add(label_1);
+        JScrollPane scrollPane = new JScrollPane(contentArea);
+        scrollPane.setBounds(73, 60, 311, 185);
+        addPostFrame.getContentPane().add(scrollPane);
+        JLabel label_2 = new JLabel("아이디:");
+        label_2.setHorizontalAlignment(SwingConstants.CENTER);
+        label_2.setBounds(0, 263, 74, 36);
+        addPostFrame.getContentPane().add(label_2);
+        addPostFrame.getContentPane().add(authorField);
+        addPostFrame.getContentPane().add(addPostButton);
+        addPostFrame.getContentPane().add(closeButton);
+
+        addPostFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        addPostButton.addActionListener(e -> {
+            addPost();
+            addPostFrame.dispose();
+        });
+
+        closeButton.addActionListener(e -> addPostFrame.dispose());
+    }
+
+    public void setVisible(boolean visible) {
+        addPostFrame.setVisible(visible);
+    }
+
+    private void addPost() {
+        String title = titleField.getText();
+        String content = contentArea.getText();
+        String author = authorField.getText();
+
+        // Add a new row to the table in the PostListGUI
+        postListGUI.getTableModel().addRow(new Object[]{postListGUI.getTableModel().getRowCount() + 1, title, content, author});
+    }
+}

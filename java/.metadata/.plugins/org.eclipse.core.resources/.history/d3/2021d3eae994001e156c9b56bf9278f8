@@ -1,0 +1,75 @@
+package User;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.table.*;
+
+import DB.*;
+
+public class MedicalHistory extends JFrame{
+	DefaultTableModel tableModel = null;
+	Database db = new Database();
+	
+    public MedicalHistory() {
+    	JFrame frame = new JFrame("병원찾기");
+    	setSize(700, 430);
+    	setResizable(false); //창 크기 조절 X
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	setBackground(Color.white);
+        
+        Container contentPane = getContentPane(); // 컨텐트팬 알아내기
+	    contentPane.setLayout(null);
+	    contentPane.setBackground(Color.white);
+    	
+    	String[] colName = {"의사", "진료일자", "진단내역", "진료금액"}; //진료내역 정보를 나타낼 열 값
+    	tableModel = new DefaultTableModel(colName, 0);
+	    
+        JTable Hospital_table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(Hospital_table);
+        scrollPane.setBounds(0, 33, 688, 361); // 테이블 크기 조정
+        Hospital_table.setRowHeight(40); //행 너비 조절
+        Hospital_table.getColumnModel().getColumn(0).setPreferredWidth(50); // 번호 열 너비 조절
+        Hospital_table.getColumnModel().getColumn(1).setPreferredWidth(450); // 아이디 열 너비 조절
+        Hospital_table.getColumnModel().getColumn(2).setPreferredWidth(60); // 제목 열 너비 조절
+        Hospital_table.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+        Hospital_table.getTableHeader().setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+        Hospital_table.getTableHeader().setReorderingAllowed(false); //이동 불가
+        Hospital_table.getTableHeader().setBackground(Color.white); //테이블 컬럼 색 변경
+        Hospital_table.getParent().setBackground(Color.white); //테이블 배경 색 변경
+        
+        contentPane.setLayout(null); 
+        contentPane.add(scrollPane);
+        
+        //String[] data = {"aa1234", "주소~~~~", "전번~~~~"};
+        //tableModel.addRow(data);
+
+        // 검색어 입력 필드
+        JTextField searchField = new JTextField(20);
+        searchField.setBounds(189, 6, 226, 21);
+        
+        //검색 버튼
+        JButton searchButton = new JButton("검색");
+        searchButton.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
+        searchButton.setBounds(420, 5, 71, 23);
+        searchButton.setContentAreaFilled(false);
+        
+        contentPane.setLayout(null);
+        contentPane.add(searchField);
+        contentPane.add(searchButton);
+        
+        
+       /* 검색 버튼 이벤트 */ 
+        searchButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+			}
+        });
+        
+        
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new MedicalHistory();
+    }
+}

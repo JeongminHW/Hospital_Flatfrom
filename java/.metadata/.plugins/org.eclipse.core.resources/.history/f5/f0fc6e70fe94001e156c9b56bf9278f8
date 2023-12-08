@@ -1,0 +1,160 @@
+package User;
+
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+import java.awt.event.*;
+
+import Main.*;
+import DB.*;
+import Doctor.*;
+
+public class UserLogin{
+	Database db = new Database();
+	String user_id;    // 유저가 입력한 아이디를 담을 변수
+	String user_pw;  // 유저가 입력한 비밀번호를 담을 변수
+	
+    public UserLogin() {
+    	
+    	JFrame frame = new JFrame();
+        frame.setSize(700, 430);
+    	frame.setResizable(false); //창 크기 조절 X
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        Container contentPane = frame.getContentPane(); // 컨텐트팬 알아내기
+	    contentPane.setLayout(null);
+	    contentPane.setBackground(Color.white);
+	    
+	    //타이틀
+        JLabel title = new JLabel("병원 종합 상담 플랫폼");
+        title.setHorizontalAlignment(SwingConstants.CENTER);
+        title.setFont(new Font("맑은 고딕", Font.BOLD, 26));
+        title.setBounds(0, 25, 684, 53);
+        contentPane.add(title);
+
+        //서브타이틀
+        JLabel subtitle = new JLabel("HEALTH");
+        subtitle.setHorizontalAlignment(SwingConstants.CENTER);
+        subtitle.setFont(new Font("맑은 고딕", Font.BOLD, 26));
+        subtitle.setBounds(0, 66, 684, 45);
+        contentPane.add(subtitle);
+
+        //회원가입 버튼
+        JButton Signup_btn = new JButton("회원가입");
+        Signup_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+        Signup_btn.setBounds(380, 308, 95, 30);
+        Signup_btn.setContentAreaFilled(false);
+        contentPane.add(Signup_btn);
+        
+        //의사 로그인 버튼
+        JButton DrLogin_btn = new JButton("의사로 로그인");
+        DrLogin_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+        DrLogin_btn.setBounds(200, 308, 130, 30);
+        DrLogin_btn.setContentAreaFilled(false);
+        contentPane.add(DrLogin_btn);
+
+        //로그인 내부 패널
+        JPanel panel = new JPanel();
+        panel.setBorder(new LineBorder(new Color(0, 0, 0), 2));
+        panel.setBounds(148, 132, 386, 166);
+        contentPane.add(panel);
+        panel.setLayout(null);
+        panel.setBackground(Color.white);
+        
+        
+        // 로그인 버튼
+        JButton Login_btn = new JButton("로그인");
+        Login_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+        Login_btn.setBounds(278, 73, 75, 62);
+        Login_btn.setContentAreaFilled(false);
+        panel.add(Login_btn);
+
+        // 아이디 입력 필드
+        JTextField ID_field = new JTextField();
+        ID_field.setBounds(108, 73, 164, 26);
+        panel.add(ID_field);
+        ID_field.setColumns(10);
+        
+        //비밀번호 입력 필드
+        JPasswordField PW_field = new JPasswordField();
+        PW_field.setBounds(108, 109, 164, 26);
+        panel.add(PW_field);
+        
+        // 로그인 라벨
+        JLabel Login_lb = new JLabel("로그인");
+        Login_lb.setFont(new Font("맑은 고딕", Font.BOLD, 15));
+        Login_lb.setHorizontalAlignment(SwingConstants.CENTER);
+        Login_lb.setBounds(0, 21, 386, 42);
+        panel.add(Login_lb);
+        
+        //아이디 라벨
+        JLabel ID_lb = new JLabel("아이디");
+        ID_lb.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+        ID_lb.setBounds(32, 77, 64, 16);
+        panel.add(ID_lb);
+        ID_lb.setHorizontalAlignment(SwingConstants.RIGHT);
+        
+        //비밀번호 라벨
+        JLabel PW_lb = new JLabel("비밀번호");
+        PW_lb.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+        PW_lb.setBounds(21, 113, 75, 16);
+        panel.add(PW_lb);
+        PW_lb.setHorizontalAlignment(SwingConstants.RIGHT);
+       
+        /* 로그인 완료 시 이벤트 */
+        Login_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	JButton b = (JButton)e.getSource();
+
+            	
+                user_id = ID_field.getText(); // 사용자가 입력한 아이디를 user_id 전역변수에 저장
+                user_pw = "";
+	        	  for(int i=0; i<PW_field.getPassword().length; i++) {
+	        	    	user_pw = user_pw + PW_field.getPassword()[i];
+				  }// 사용자가 입력한 PW를 user_pw 전역변수에 저장
+                
+                if(b.getText().equals("로그인")) {
+					if(user_id.equals("") || user_pw.equals("")) {
+						JOptionPane.showMessageDialog(null, "아이디와 비밀번호 모두 입력해주세요", "로그인 실패", JOptionPane.ERROR_MESSAGE);
+						System.out.println("로그인 실패 > 로그인 정보 미입력");
+					}
+					
+					else if(user_id != null && user_pw != null) {
+						/* 로그인 데이터를 DB와 비교하는 문장 */
+						if(db.logincheck(user_id, user_pw)) {	
+							System.out.println("로그인 성공");
+							JOptionPane.showMessageDialog(null, "로그인에 성공하였습니다");
+			                new Main(); //로그인 성공시 메인 페이지로 이동
+							frame.setVisible(false);
+						} else {
+							System.out.println("로그인 실패 > 로그인 정보 불일치");
+							JOptionPane.showMessageDialog(null, "로그인에 실패하였습니다");
+						}
+					}
+				}
+            }
+        });
+
+        /* 회원가입 버튼 클릭 이벤트 */
+        Signup_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new UserSignIn(); //회원가입 화면 출력
+            	frame.setVisible(false);
+            }
+        });
+        
+        /* 의사로 로그인 버튼 클릭 이벤트 */
+        DrLogin_btn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new DrMain(); //회원가입 화면 출력
+            	frame.setVisible(false);
+            }
+        });
+        
+        frame.setVisible(true);
+    }
+    
+    public static void main(String[] args) {
+    	new UserLogin();
+    }
+}
