@@ -20,21 +20,10 @@ public class Main{
 	    contentPane.setLayout(null);
 	    contentPane.setBackground(Color.white);
 		
-		JTextField search_text = new JTextField(); //검색필드
-		search_text.setBounds(90, 30, 382, 31);
-		frame.add(search_text);
-		search_text.setColumns(10);
-		
-		JButton search_btn = new JButton("검색"); //검색버튼
-		search_btn.setContentAreaFilled(false); // 버튼 투명하게
-		search_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-		search_btn.setBounds(475, 30, 115, 31);
-		frame.add(search_btn);
-		
 		
 		// 의료진에게 질문하기 버튼 생성
 		JButton main_Qna_btn = new JButton("의료진에게");
-		main_Qna_btn.setBounds(60, 100, 160, 160);
+		main_Qna_btn.setBounds(60, 70, 160, 160);
 		main_Qna_btn.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
 		main_Qna_btn.setContentAreaFilled(false); // 버튼 투명하게
 		main_Qna_btn.setHorizontalAlignment(SwingConstants.LEFT); // 버튼 글씨 위치
@@ -43,11 +32,11 @@ public class Main{
 		// 질문하기 라벨 생성
 		JLabel question_lb = new JLabel("질문하기");
 		question_lb.setFont(new Font("맑은 고딕", Font.BOLD, 16));
-		question_lb.setBounds(77, 110, 100, 50);
+		question_lb.setBounds(77, 80, 100, 50);
 		
 		// 의료진 이미지 생성
 		JLabel P_img = new JLabel(new ImageIcon("image/person_icon.png"));
-		P_img.setBounds(108, 160, 62, 78);
+		P_img.setBounds(108, 130, 62, 78);
 		
 		frame.add(question_lb);
 		frame.add(P_img);
@@ -56,7 +45,7 @@ public class Main{
 		// 병원찾기 버튼 생성
 		JButton main_Hospital_btn = new JButton("내가 원하는 정보로");
 		main_Hospital_btn.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-		main_Hospital_btn.setBounds(264, 100, 160, 160);
+		main_Hospital_btn.setBounds(264, 70, 160, 160);
 		main_Hospital_btn.setContentAreaFilled(false);
 		main_Hospital_btn.setHorizontalAlignment(SwingConstants.LEFT);
 		main_Hospital_btn.setVerticalAlignment(SwingConstants.TOP);
@@ -64,11 +53,11 @@ public class Main{
 		// 병원찾기 라벨 생성
 		JLabel srchH_lb = new JLabel("병원찾기");
 		srchH_lb.setFont(new Font("맑은 고딕", Font.BOLD, 16));
-		srchH_lb.setBounds(281, 110, 100, 50);
+		srchH_lb.setBounds(281, 80, 100, 50);
 		
 		// 병원 이미지 생성
 		JLabel H_img = new JLabel(new ImageIcon("image/hospital_icon.png"));
-		H_img.setBounds(305, 162, 74, 74);
+		H_img.setBounds(305, 130, 74, 74);
 		
 		frame.add(srchH_lb);
 		frame.add(H_img);
@@ -77,7 +66,7 @@ public class Main{
 		// 진료내역 버튼 생성
 		JButton main_History_btn = new JButton("진료내역");
 		main_History_btn.setFont(new Font("맑은 고딕", Font.BOLD, 16));
-		main_History_btn.setBounds(464, 100, 160, 160);
+		main_History_btn.setBounds(464, 70, 160, 160);
 		main_History_btn.setContentAreaFilled(false);
 		main_History_btn.setHorizontalAlignment(SwingConstants.LEFT);
 		main_History_btn.setVerticalAlignment(SwingConstants.TOP);
@@ -85,11 +74,11 @@ public class Main{
 		// 진료내역 확인하기 라벨 생성
 		JLabel check_lb = new JLabel("확인하기"); 
 		check_lb.setFont(new Font("맑은 고딕", Font.PLAIN, 14));
-		check_lb.setBounds(482, 110, 100, 50);
+		check_lb.setBounds(482, 80, 100, 50);
 		
 		// 진료내역 이미지 생성
 		JLabel C_img = new JLabel(new ImageIcon("image/heart-rate_icon.png"));
-		C_img.setBounds(506, 162, 74, 74);
+		C_img.setBounds(506, 132, 74, 74);
 		
 		frame.add(check_lb);
 		frame.add(C_img);

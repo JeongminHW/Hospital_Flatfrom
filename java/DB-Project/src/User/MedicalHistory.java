@@ -2,6 +2,8 @@ package User;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
+
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -13,6 +15,7 @@ public class MedicalHistory extends JFrame{
 	Database db = new Database();
 	
     public MedicalHistory() {
+    	db.totalprice();
     	JFrame frame = new JFrame("병원찾기");
     	setSize(700, 430);
     	setResizable(false); //창 크기 조절 X
@@ -23,8 +26,14 @@ public class MedicalHistory extends JFrame{
 	    contentPane.setLayout(null);
 	    contentPane.setBackground(Color.white);
     	
-    	String[] colName = {"의사", "진료일자", "진단내역", "진료금액", "평점"}; //진료내역 정보를 나타낼 열 값
-    	tableModel = new DefaultTableModel(colName, 0);
+	    
+    	List<String[]> data = db.historyData();
+    	String[] colName = {"의사", "진료일자", "진단내역", "진료금액"}; //진료내역 정보를 나타낼 열 값
+    	tableModel = new DefaultTableModel(data.toArray(new String[0][0]), colName) {
+    		public boolean isCellEditable(int i, int c) {
+                return false;
+            }
+    	};
 	    
         JTable Hospital_table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(Hospital_table);
@@ -37,6 +46,7 @@ public class MedicalHistory extends JFrame{
         Hospital_table.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
         Hospital_table.getTableHeader().setFont(new Font("맑은 고딕", Font.PLAIN, 12));
         Hospital_table.getTableHeader().setReorderingAllowed(false); //이동 불가
+        Hospital_table.getTableHeader().setResizingAllowed(false); //크기 조절 불가
         Hospital_table.getTableHeader().setBackground(Color.white); //테이블 컬럼 색 변경
         Hospital_table.getParent().setBackground(Color.white); //테이블 배경 색 변경
         
@@ -131,6 +141,21 @@ public class MedicalHistory extends JFrame{
 		contentPane.add(mypage_img);
 		contentPane.add(Mypage_btn);
         
+		
+		/* 테이블의 셀 클릭 이벤트 핸들링 */
+		Hospital_table.addMouseListener(new MouseAdapter() {
+
+			//마우스 클릭시 처리를 담당하는 메소드 재정의
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = Hospital_table.getSelectedRow();
+				String db_drname = (String) Hospital_table.getModel().getValueAt(row, 0);
+				int result = JOptionPane.showConfirmDialog(null, "평균평점 : " + 
+						db.avgstar(db_drname), db_drname + "의 평균평점", JOptionPane.DEFAULT_OPTION);
+			}
+
+		});
+		
         
        /* 총 진료비 검색 버튼 이벤트 */ 
         searchButton.addActionListener(new ActionListener() {
@@ -138,7 +163,8 @@ public class MedicalHistory extends JFrame{
         		JButton b = (JButton)e.getSource();
         		
         		if(b.getText().equals("총진료비 조회")) {
-        			
+        			int result = JOptionPane.showConfirmDialog(null, "총 진료비 : " + 
+                			db.totalprice() + " 원", "총진료비", JOptionPane.DEFAULT_OPTION);
         		}
 			}
         });
@@ -148,7 +174,7 @@ public class MedicalHistory extends JFrame{
 		Home_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Main();
-				frame.setVisible(false);
+				setVisible(false);
 			}
 		});
 		
@@ -157,7 +183,7 @@ public class MedicalHistory extends JFrame{
 		hospital_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new HospitalSearch();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -166,7 +192,7 @@ public class MedicalHistory extends JFrame{
 		qna_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new QnA();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -175,7 +201,7 @@ public class MedicalHistory extends JFrame{
 		Mhistory_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new MedicalHistory();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -184,13 +210,13 @@ public class MedicalHistory extends JFrame{
 		Mypage_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new MyPage();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
 		
 		/* 창 닫기 이벤트 */
-		frame.addWindowListener(new WindowCloseHandler());
+		addWindowListener(new WindowCloseHandler());
         
         
         setVisible(true);

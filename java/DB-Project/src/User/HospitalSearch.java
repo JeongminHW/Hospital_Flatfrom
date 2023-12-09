@@ -13,6 +13,8 @@ public class HospitalSearch extends JFrame {
 	DefaultTableModel tableModel = null;
 	Database db = new Database();
 	
+	String searchtext; //검색어를 담을 변수
+	
     public HospitalSearch() {
     	JFrame frame = new JFrame("병원찾기");
     	setSize(700, 430);
@@ -26,7 +28,11 @@ public class HospitalSearch extends JFrame {
     	
 	    List<String[]> data = db.hospitalData();
     	String[] colName = {"병원명", "주소", "전화번호"}; //병원 정보를 나타낼 열 값
-    	tableModel = new DefaultTableModel(data.toArray(new String[0][0]), colName);
+    	tableModel = new DefaultTableModel(data.toArray(new String[0][0]), colName) {
+    		public boolean isCellEditable(int i, int c) {
+                return false;
+            }
+    	};
 	    
         JTable Hospital_table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(Hospital_table);
@@ -38,6 +44,7 @@ public class HospitalSearch extends JFrame {
         Hospital_table.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
         Hospital_table.getTableHeader().setFont(new Font("맑은 고딕", Font.PLAIN, 12));
         Hospital_table.getTableHeader().setReorderingAllowed(false); //이동 불가
+        Hospital_table.getTableHeader().setResizingAllowed(false); //크기 조절 불가
         Hospital_table.getTableHeader().setBackground(Color.white); //테이블 컬럼 색 변경
         Hospital_table.getParent().setBackground(Color.white); //테이블 배경 색 변경
         
@@ -139,6 +146,17 @@ public class HospitalSearch extends JFrame {
        /* 검색 버튼 이벤트 */ 
         searchButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		JButton b = (JButton)e.getSource();
+        		searchtext = searchField.getText(); //입력한 검색어 저장
+        		if(b.getText().equals("검색")) {
+        			List<String[]> schospital = db.searchhospital(searchtext);
+        	    	String[] colName = {"병원명", "주소", "전화번호"}; //병원 정보를 나타낼 열 값
+        	    	tableModel = new DefaultTableModel(schospital.toArray(new String[0][0]), colName); //데이터 갱신
+        	    	Hospital_table.setModel(tableModel);
+        	        Hospital_table.getColumnModel().getColumn(0).setPreferredWidth(130); // 번호 열 너비 조절
+        	        Hospital_table.getColumnModel().getColumn(1).setPreferredWidth(420); // 아이디 열 너비 조절
+        	        Hospital_table.getColumnModel().getColumn(2).setPreferredWidth(80); // 제목 열 너비 조절
+        		}
 			}
         });
         
@@ -147,7 +165,7 @@ public class HospitalSearch extends JFrame {
 		Home_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Main();
-				frame.setVisible(false);
+				setVisible(false);
 			}
 		});
 		
@@ -156,7 +174,7 @@ public class HospitalSearch extends JFrame {
 		hospital_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new HospitalSearch();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -165,7 +183,7 @@ public class HospitalSearch extends JFrame {
 		qna_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new QnA();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -174,7 +192,7 @@ public class HospitalSearch extends JFrame {
 		Mhistory_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new MedicalHistory();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -183,13 +201,13 @@ public class HospitalSearch extends JFrame {
 		Mypage_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new MyPage();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
         
 		
 		/* 창 닫기 이벤트 */
-		frame.addWindowListener(new WindowCloseHandler());
+		addWindowListener(new WindowCloseHandler());
 		
         
         setVisible(true);

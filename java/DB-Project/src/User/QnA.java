@@ -9,6 +9,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 import DB.*;
 import Main.*;
@@ -16,6 +17,8 @@ import Main.*;
 public class QnA extends JFrame{
 	DefaultTableModel tableModel = null;
 	Database db = new Database();
+	
+	String searchtext; //검색어를 담을 변수
 	
     public QnA() {
     	JFrame frame = new JFrame("게시판");
@@ -28,8 +31,13 @@ public class QnA extends JFrame{
 	    contentPane.setLayout(null);
 	    contentPane.setBackground(Color.white);
     	
+	    List<String[]> data = db.qnaData();
     	String[] colName = {"번호", "아이디", "제목", "내용"}; //게시글 정보를 나타낼 열 값
-    	tableModel = new DefaultTableModel(colName, 0);
+    	tableModel = new DefaultTableModel(data.toArray(new String[0][0]), colName) {
+    		public boolean isCellEditable(int i, int c) {
+                return false;
+            }
+    	};
 	    
         JTable postTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(postTable);
@@ -42,14 +50,12 @@ public class QnA extends JFrame{
         postTable.setFont(new Font("맑은 고딕", Font.PLAIN, 12));
         postTable.getTableHeader().setFont(new Font("맑은 고딕", Font.PLAIN, 12));
         postTable.getTableHeader().setReorderingAllowed(false); //이동 불가
+        postTable.getTableHeader().setResizingAllowed(false); //크기 조절 불가
         postTable.getTableHeader().setBackground(Color.white); //테이블 컬럼 색 변경
         postTable.getParent().setBackground(Color.white); //테이블 배경 색 변경
         
         contentPane.setLayout(null); 
         contentPane.add(scrollPane);
-        
-        //String[] data = {"1", "aa1234", "주소~~~~", "전번~~~~"};
-        //tableModel.addRow(data);
 
         
         JTextField searchField = new JTextField(20);
@@ -149,8 +155,56 @@ public class QnA extends JFrame{
        /* 검색 버튼 이벤트 */ 
         searchButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		JButton b = (JButton)e.getSource();
+        		
+        		searchtext = searchField.getText(); //입력한 검색어 저장
+        		if(b.getText().equals("검색")) {
+        			List<String[]> scdata = db.searchpost(searchtext);
+                	String[] colName = {"번호", "아이디", "제목", "내용"}; //게시글 정보를 나타낼 열 값
+                	tableModel.setDataVector(scdata.toArray(new String[0][0]), colName); // 데이터 갱신
+                	postTable.setModel(tableModel);
+                	
+                	postTable.getColumnModel().getColumn(0).setPreferredWidth(10); // 번호 열 너비 조절
+                    postTable.getColumnModel().getColumn(1).setPreferredWidth(80); // 아이디 열 너비 조절
+                    postTable.getColumnModel().getColumn(2).setPreferredWidth(230); // 제목 열 너비 조절
+                    postTable.getColumnModel().getColumn(3).setPreferredWidth(230); // 내용 열 너비 조절
+        		}
 			}
         });
+        
+        
+        /* 테이블의 셀 클릭 이벤트 핸들링 */
+        postTable.addMouseListener(new MouseAdapter() {
+
+			//마우스 클릭시 처리를 담당하는 메소드 재정의
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int row = postTable.getSelectedRow();
+				String db_postnum = (String) postTable.getModel().getValueAt(row, 0);
+				System.out.println(db_postnum);
+				int result = JOptionPane.showConfirmDialog(null, "게시글을 삭제하시겠습니까?", "게시글 삭제", JOptionPane.YES_NO_OPTION);
+				if(result == JOptionPane.YES_OPTION)
+ 			   	{
+					db.postdel(db_postnum);
+					List<String[]> data = db.qnaData();
+			    	String[] colName = {"번호", "아이디", "제목", "내용"}; //게시글 정보를 나타낼 열 값
+			    	tableModel = new DefaultTableModel(data.toArray(new String[0][0]), colName) {
+			    		public boolean isCellEditable(int i, int c) {
+			                return false;
+			            }
+			    	};
+					postTable.setModel(tableModel);
+					postTable.getColumnModel().getColumn(0).setPreferredWidth(10); // 번호 열 너비 조절
+			        postTable.getColumnModel().getColumn(1).setPreferredWidth(80); // 아이디 열 너비 조절
+			        postTable.getColumnModel().getColumn(2).setPreferredWidth(230); // 제목 열 너비 조절
+			        postTable.getColumnModel().getColumn(3).setPreferredWidth(230); // 내용 열 너비 조절
+ 			   	}
+ 			   	else
+ 			   		return;
+			}
+
+		});
+		
         
         /* 글 작성 버튼 이벤트 */
         newPostButton.addActionListener(new ActionListener() {
@@ -164,7 +218,7 @@ public class QnA extends JFrame{
 		Home_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Main();
-				frame.setVisible(false);
+				setVisible(false);
 			}
 		});
 		
@@ -173,7 +227,7 @@ public class QnA extends JFrame{
 		hospital_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new HospitalSearch();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -182,7 +236,7 @@ public class QnA extends JFrame{
 		qna_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new QnA();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -191,7 +245,7 @@ public class QnA extends JFrame{
 		Mhistory_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new MedicalHistory();
-            	frame.setVisible(false);
+            	setVisible(false);
 			}
 		});
 		
@@ -200,13 +254,13 @@ public class QnA extends JFrame{
 		Mypage_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new MyPage();
-            	frame.setVisible(false);
+				setVisible(false);
 			}
 		});
 		
 		
 		/* 창 닫기 이벤트 */
-		frame.addWindowListener(new WindowCloseHandler());
+		addWindowListener(new WindowCloseHandler());
 		
 
         setVisible(true);

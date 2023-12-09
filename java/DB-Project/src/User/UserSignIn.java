@@ -109,9 +109,9 @@ public class UserSignIn {
 							ID_text.grabFocus();
 							return;
 	        		 }
-	        	 }
-	        	 else {
-	        		 JOptionPane.showMessageDialog(null, "사용가능한 아이디입니다.", "아이디 중복 체크", JOptionPane.INFORMATION_MESSAGE);
+		        	 else {
+		        		 JOptionPane.showMessageDialog(null, "사용가능한 아이디입니다.", "아이디 중복 체크", JOptionPane.INFORMATION_MESSAGE);
+		        	 }
 	        	 }
 	         }
 	      });

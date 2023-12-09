@@ -42,16 +42,9 @@ public class UserLogin{
         //회원가입 버튼
         JButton Signup_btn = new JButton("회원가입");
         Signup_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-        Signup_btn.setBounds(380, 308, 95, 30);
+        Signup_btn.setBounds(300, 308, 95, 30);
         Signup_btn.setContentAreaFilled(false);
         contentPane.add(Signup_btn);
-        
-        //의사 로그인 버튼
-        JButton DrLogin_btn = new JButton("의사로 로그인");
-        DrLogin_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-        DrLogin_btn.setBounds(200, 308, 130, 30);
-        DrLogin_btn.setContentAreaFilled(false);
-        contentPane.add(DrLogin_btn);
 
         //로그인 내부 패널
         JPanel panel = new JPanel();
@@ -61,13 +54,6 @@ public class UserLogin{
         panel.setLayout(null);
         panel.setBackground(Color.white);
         
-        
-        // 로그인 버튼
-        JButton Login_btn = new JButton("로그인");
-        Login_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
-        Login_btn.setBounds(278, 73, 75, 62);
-        Login_btn.setContentAreaFilled(false);
-        panel.add(Login_btn);
 
         // 아이디 입력 필드
         JTextField ID_field = new JTextField();
@@ -79,6 +65,13 @@ public class UserLogin{
         JPasswordField PW_field = new JPasswordField();
         PW_field.setBounds(108, 109, 164, 26);
         panel.add(PW_field);
+
+        // 로그인 버튼
+        JButton Login_btn = new JButton("로그인");
+        Login_btn.setFont(new Font("맑은 고딕", Font.BOLD, 12));
+        Login_btn.setBounds(278, 73, 75, 62);
+        Login_btn.setContentAreaFilled(false);
+        panel.add(Login_btn);
         
         // 로그인 라벨
         JLabel Login_lb = new JLabel("로그인");
@@ -101,7 +94,7 @@ public class UserLogin{
         panel.add(PW_lb);
         PW_lb.setHorizontalAlignment(SwingConstants.RIGHT);
        
-        /* 로그인 완료 시 이벤트 */
+        /* 로그인 시 이벤트 */
         Login_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	JButton b = (JButton)e.getSource();
@@ -139,14 +132,6 @@ public class UserLogin{
         Signup_btn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new UserSignIn(); //회원가입 화면 출력
-            	frame.setVisible(false);
-            }
-        });
-        
-        /* 의사로 로그인 버튼 클릭 이벤트 */
-        DrLogin_btn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new DrMain(); //의사 화면 출력
             	frame.setVisible(false);
             }
         });

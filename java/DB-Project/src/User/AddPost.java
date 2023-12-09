@@ -3,8 +3,14 @@ package User;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.*;
+import java.time.*;
+import java.time.format.*;
+
+import DB.*;
 
 public class AddPost extends JFrame{
+	Database db = new Database();
 
     public AddPost() {
     	JFrame addpostframe = new JFrame("게시글 등록");
@@ -64,13 +70,23 @@ public class AddPost extends JFrame{
         /* 작성 완료 버튼 클릭 이벤트 */
         addPostButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		String title = titleField.getText();
+                String content = contentArea.getText();
+
+                // 현재 날짜 및 시간 가져오기
+                LocalDate date = LocalDate.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+                db.postdata(title, content, date.format(formatter));
+                db.qnaData();
+                new QnA();
+                setVisible(false);
 			}
         });
         
         /* 취소 버튼 클릭 이벤트 */
         closeButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		System.exit(0);
+        		setVisible(false);
 			}
         });
 		

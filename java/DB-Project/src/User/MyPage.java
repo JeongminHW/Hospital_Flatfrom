@@ -163,7 +163,6 @@ public class MyPage extends JFrame {
  			   	if(result == JOptionPane.YES_OPTION)
  			   	{
  					db.usercancel();
- 					System.out.println("성공");
  					new UserLogin();
  					setVisible(false);
  			   	}

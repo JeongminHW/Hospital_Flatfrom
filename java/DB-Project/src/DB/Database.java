@@ -128,7 +128,6 @@ public class Database {
 		try {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
-			String row[] = new String[3];
 			while(rs.next()) {
 				String hos_name= rs.getString("병원명");
 				String address = rs.getString("주소");
@@ -139,8 +138,212 @@ public class Database {
 		} catch(SQLException e) {
 			e.printStackTrace();
 			}
-		
+
+        System.out.println("병원 정보 불러오기 완료");
 		return dataList;
+	}
+	
+	
+	/* 병원찾기 검색 메소드 */
+	public List<String[]> searchhospital(String _text) {
+		List<String[]> dataList = new ArrayList<>();
+		String text = _text;
+		String sql = "select 병원명, 주소, 전화번호 from 병원 where 주소 like ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + text + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()){
+				String hname= rs.getString("병원명");
+				String haddress = rs.getString("주소");
+				String htel = rs.getString("전화번호");
+				
+				dataList.add(new String[]{hname, haddress, htel});
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+			}
+		
+		System.out.println(text + " 검색");
+		return dataList;
+	}
+	
+	
+	/* 게시글 테이블에 데이터 넣기 */
+	public List<String[]> qnaData() {
+	    List<String[]> dataList = new ArrayList<>();
+		
+		String sql = "Select 게시글번호, ID, 제목, 내용 From 게시글";
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				String postnum= rs.getString("게시글번호");
+				String userid = rs.getString("ID");
+				String posttitle = rs.getString("제목");
+				String postcontent = rs.getString("내용");
+				
+	            dataList.add(new String[]{postnum, userid, posttitle, postcontent});
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+			}
+
+        System.out.println("게시글 내용 불러오기 완료");
+		return dataList;
+	}
+	
+	
+
+	/* 게시글 작성 후 데이터 저장 메소드 */
+	public boolean postdata(String _title, String _content, String _date) {
+		String sql = "SELECT ID FROM 회원 WHERE 접속여부 = 1";
+		String updatesql = "INSERT INTO 게시글 (게시글번호, 제목, 내용, 작성일자, ID) VALUES (게시글번호_시퀀스.NEXTVAL, ?, ?, ?, ?)";
+
+		String id;
+		String posttitle = _title;
+		String postcontent = _content;
+		String postdate = _date;
+		
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			PreparedStatement pstmt = conn.prepareStatement(updatesql);
+			while(rs.next()) {
+				id = rs.getString("ID");
+				
+				pstmt.setString(1, posttitle);
+				pstmt.setString(2, postcontent);
+				pstmt.setString(3, postdate);
+				pstmt.setString(4, id);
+				pstmt.executeUpdate();
+
+				System.out.println("게시글 저장 완료");
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			}
+		
+		return false;
+	}
+	
+	
+	/* 게시글 검색 메소드 */
+	public List<String[]> searchpost(String _text) {
+		List<String[]> dataList = new ArrayList<>();
+		String text = _text;
+		String sql = "select 게시글번호, ID, 제목, 내용 from 게시글 where 제목 like ?";
+		try {
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + text + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()){
+				String postnum= rs.getString("게시글번호");
+				String userid = rs.getString("ID");
+				String posttitle = rs.getString("제목");
+				String postcontent = rs.getString("내용");
+				
+				dataList.add(new String[]{postnum, userid, posttitle, postcontent});
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+			}
+		
+		System.out.println(text + " 검색");
+		return dataList;
+	}
+	
+	
+	/* 게시글 삭제 메소드 */
+	public boolean postdel(String _num) {
+		String num = _num;
+		
+		try {
+			CallableStatement cstmt = conn.prepareCall("{call 게시글_삭제(?)}"); // 게시글 삭제 프로시저
+			cstmt.setString(1, num);
+			cstmt.execute();
+			System.out.println("게시글 삭제 완료");
+			
+		} catch(SQLException e) {
+			e.printStackTrace();
+			}
+		return false;
+	}
+	
+	
+	/* 진료내역 테이블에 데이터 넣기 */
+	public List<String[]> historyData() {
+	    List<String[]> dataList = new ArrayList<>();
+		
+		String sql = "Select 의사.이름, to_char(진료.진료일자, 'yyyy/mm/dd'), 진료.진단내용, 진료.진료금액 From 의사, 진료, 회원"
+					+ " Where 의사.의사번호 = 진료.의사코드 And 회원.ID = 진료.ID and 회원.접속여부 = 1";
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			CallableStatement cstmt = conn.prepareCall("{call 평균평점_저장}"); // 평균평점 저장 프로시저
+			while(rs.next()) {
+				String drname = rs.getString(1);
+				String medicdate = rs.getString(2);
+				String mediccontent = rs.getString(3);
+				String price = rs.getString(4);
+
+				cstmt.execute();
+	            dataList.add(new String[]{drname, medicdate, mediccontent, price});
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+			}
+
+        System.out.println("진료내역 불러오기 완료");
+		return dataList;
+	}
+	
+	
+	/* 총진료비 조회 메소드 */
+	public String totalprice() {
+		String sql = "SELECT 회원.ID, 진료.총진료비 FROM 진료, 회원 WHERE 진료.ID = 회원.ID AND 접속여부 = 1";
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			CallableStatement cstmt = conn.prepareCall("{call 진료비_총액_조회_및_저장(?)}"); // 총진료비 저장, 조회 프로시저
+			while(rs.next()) {
+				String id = rs.getString(1);
+				cstmt.setString(1, id);
+				cstmt.execute();
+				System.out.println("진료비 조회");
+				
+				return rs.getString(2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	
+	/* 테이블 열 클릭 후 평균평점 조회 메소드 */
+	public String avgstar(String _name) {
+		String sql = "SELECT 평균평점 FROM 의사 WHERE 이름 = '" + _name + "'";
+		try {
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
+			CallableStatement cstmt = conn.prepareCall("{call 평균평점_저장}");
+			while(rs.next()) {
+				if(rs.getString("평균평점") == null) {
+					return "평점이 없습니다.";
+				}
+				else {
+					cstmt.execute();
+					return rs.getString("평균평점");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	
